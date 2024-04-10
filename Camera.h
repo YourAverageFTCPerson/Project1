@@ -32,9 +32,9 @@ struct Camera
 
 	Camera(GLint width, GLint height, glm::vec3 position);
 
-	void updateMatrix(float fov, float zNear, float zFar);
+	void updateMatrix(GLfloat fov, GLfloat zNear, GLfloat zFar);
 
-	void matrix(Shader& shader, const char* uniform);
+	void matrix(Shader& shader, const GLchar* uniform);
 
 	void handleMovementInputs(GLFWwindow* window);
 };

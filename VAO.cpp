@@ -25,5 +25,5 @@ void VAO::bind()
 
 void VAO::unbind()
 {
-	glBindVertexArray(0);
+	glBindVertexArray(GL_NONE);
 }

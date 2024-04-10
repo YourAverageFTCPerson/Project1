@@ -5,8 +5,8 @@
 
 using json = nlohmann::json;
 
-template<typename VecType>
-std::vector<VecType> groupFloats(const std::vector<GLfloat>& floats, const size_t& components);
+template<typename V>
+std::vector<V> groupFloats(const std::vector<GLfloat>& floats, const size_t& components);
 
 #define groupFloatsVec2(floats) groupFloats<glm::vec2>(floats, 2)
 #define groupFloatsVec3(floats) groupFloats<glm::vec3>(floats, 3)

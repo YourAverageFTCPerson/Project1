@@ -4,7 +4,7 @@ Camera::Camera(GLint width, GLint height, glm::vec3 position) : width{ width }, 
 {
 }
 
-void Camera::updateMatrix(float fov, float zNear, float zFar)
+void Camera::updateMatrix(GLfloat fov, GLfloat zNear, GLfloat zFar)
 {
 	// The model matrix is for turning local coordinates into world coordinates. (Not here)
 	glm::mat4 view = glm::lookAt(position, position + orientation, up); // For turning world coordinates into view coordinates.
@@ -13,7 +13,7 @@ void Camera::updateMatrix(float fov, float zNear, float zFar)
 	cameraMatrix = projection * view;
 }
 
-void Camera::matrix(Shader& shader, const char* uniform)
+void Camera::matrix(Shader& shader, const GLchar* uniform)
 {
 	glUniformMatrix4fv(glGetUniformLocation(shader.handle, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }

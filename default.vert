@@ -22,6 +22,6 @@ void main()
 	crntPos = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
 	gl_Position = camMatrix * vec4(crntPos, 1.0f);
 	color = aColor;
-	texCoord = /*mat2(0.0f, -1.0f, 1.0f, 0.0f) * */aTex;
+	texCoord = mat2(0.0f, -1.0f, 1.0f, 0.0f) * aTex;
 	Normal = aNormal;
 }

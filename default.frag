@@ -18,7 +18,7 @@ uniform vec3 camPos;
 #define DIRECT_LIGHT 1
 #define SPOTLIGHT 2
 
-#define TYPE_OF_LIGHT SPOTLIGHT
+#define TYPE_OF_LIGHT POINT_LIGHT
 
 vec4 light()
 {

@@ -1,6 +1,7 @@
-/*#include "Model.h"
+#if 1
+#include "Model.h"
 
-constexpr GLint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
+static constexpr GLint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
 
 int main()
 {
@@ -26,8 +27,6 @@ int main()
 
 	Shader shader("default.vert", "default.frag");
 
-	Shader lightShader("light.vert", "light.frag");
-
 	glm::vec4 lightColor{ 1.0f, 1.0f, 1.0f, 1.0f };
 	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
 	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
@@ -38,47 +37,54 @@ int main()
 
 	glEnable(GL_DEPTH_TEST);
 
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-
 	Camera camera{ WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3{ 0.0f, 0.0f, 2.0f } };
 
-	Model model("models/sword/scene.gltf");
+	try {
+		Model model("models/sword/scene.gltf");
 
-	bool escaped = false;
-	
-	GLenum error;
-	while (!glfwWindowShouldClose(window))
+		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		bool escaped = false;
+
+		GLenum error;
+		while (!glfwWindowShouldClose(window))
+		{
+			glfwPollEvents();
+			glClearColor(0.07f, 0.13f, 0.17f, 1.0f); // Navy blue
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				escaped = true;
+				camera.firstClick = true;
+			}
+			else if (escaped && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT))
+			{
+				glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				escaped = false;
+			}
+
+			if (!escaped)
+			{
+				camera.handleMovementInputs(window);
+			}
+			camera.updateMatrix(90.0f, 0.1f, 100.0f);
+
+			model.draw(shader, camera);
+
+			glfwSwapBuffers(window);
+
+			if ((error = glGetError()) != GL_NO_ERROR)
+			{
+				std::cout << "OpenGL Error: " << error << std::endl;
+			}
+		}
+
+	}
+	catch (std::exception e)
 	{
-		glfwPollEvents();
-		glClearColor(0.07f, 0.13f, 0.17f, 1.0f); // Navy blue
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-			escaped = true;
-			camera.firstClick = true;
-		}
-		else if (escaped && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT))
-		{
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			escaped = false;
-		}
-
-		if (!escaped)
-		{
-			camera.handleMovementInputs(window);
-		}
-		camera.updateMatrix(90.0f, 0.1f, 100.0f);
-
-		model.draw(shader, camera);
-
-		glfwSwapBuffers(window);
-
-		if ((error = glGetError()) != GL_NO_ERROR)
-		{
-			std::cout << "OpenGL Error: " << error << std::endl;
-		}
+		std::cerr << "Error: " << e.what();
 	}
 
 	// Cleanup
@@ -86,7 +92,7 @@ int main()
 	glfwTerminate();
 	return 0;
 }
-*/
+#else
 #include "Mesh.h"
 
 // Vertices coordinates
@@ -163,9 +169,9 @@ int main(int argc, const char *argv[])
 		Texture{ "planksSpec.png", "specular", 1 }
 	};
 
-	std::vector <Vertex> verts(VERTICES, VERTICES + sizeof(VERTICES) / sizeof(Vertex));
-	std::vector <GLuint> ind(INDICES, INDICES + sizeof(INDICES) / sizeof(GLuint));
-	std::vector <Texture> tex(TEXTURES, TEXTURES + sizeof(TEXTURES) / sizeof(Texture));
+	std::vector<Vertex> verts(VERTICES, VERTICES + sizeof(VERTICES) / sizeof(Vertex));
+	std::vector<GLuint> ind(INDICES, INDICES + sizeof(INDICES) / sizeof(GLuint));
+	std::vector<Texture> tex(TEXTURES, TEXTURES + sizeof(TEXTURES) / sizeof(Texture));
 
 	Shader shader("default.vert", "default.frag");
 
@@ -175,8 +181,8 @@ int main(int argc, const char *argv[])
 
 	VAO lightVAO;
 
-	std::vector <Vertex> lightVerts(LIGHT_VERTICES, LIGHT_VERTICES + sizeof(LIGHT_VERTICES) / sizeof(Vertex));
-	std::vector <GLuint> lightInd(LIGHT_INDICES, LIGHT_INDICES + sizeof(LIGHT_INDICES) / sizeof(GLuint));
+	std::vector<Vertex> lightVerts(LIGHT_VERTICES, LIGHT_VERTICES + sizeof(LIGHT_VERTICES) / sizeof(Vertex));
+	std::vector<GLuint> lightInd(LIGHT_INDICES, LIGHT_INDICES + sizeof(LIGHT_INDICES) / sizeof(GLuint));
 
 	Mesh light{ lightVerts, lightInd, tex };
 
@@ -246,3 +252,4 @@ int main(int argc, const char *argv[])
 	glfwTerminate();
 	return 0;
 }
+#endif

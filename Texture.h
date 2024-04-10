@@ -5,7 +5,7 @@
 
 #include "Shader.h"
 
-void texUnit(Shader& shader, const char* uniform, GLuint unit);
+void texUnit(Shader& shader, const char* uniform, GLint unit);
 
 struct Texture
 {
