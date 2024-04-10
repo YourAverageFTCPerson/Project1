@@ -6,7 +6,7 @@
 using json = nlohmann::json;
 
 template<typename VecType>
-std::vector<VecType> groupFloats(std::vector<GLfloat> floats, size_t components);
+std::vector<VecType> groupFloats(const std::vector<GLfloat>& floats, const size_t& components);
 
 #define groupFloatsVec2(floats) groupFloats<glm::vec2>(floats, 2)
 #define groupFloatsVec3(floats) groupFloats<glm::vec3>(floats, 3)
@@ -23,11 +23,22 @@ public:
 
 private:
 	const char* file;
-
+	json jsonObject;
 	std::vector<stbi_uc> data;
 
-	json jsonObject;
+	std::vector<Mesh> meshes;
+	std::vector<glm::vec3> meshTranslations;
+	std::vector<glm::quat> meshRotations;
+	std::vector<glm::vec3> meshScales;
+	std::vector<glm::mat4> meshMatrices;
+
+	std::vector<std::string> loadedTexNames;
+	std::vector<Texture> loadedTextures;
+
+	void loadMesh(size_t indMesh);
 	
+	void traverseNode(size_t nextNode, glm::mat4 matrix = glm::mat4{ 1.0f });
+
 	std::vector<stbi_uc> getData();
 	std::vector<GLfloat> getFloats(json accessor);
 	std::vector<GLuint> getIndices(json accessor);

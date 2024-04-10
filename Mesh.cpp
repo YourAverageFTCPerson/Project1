@@ -18,10 +18,8 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indic
 	ebo.unbind();
 }
 
-void Mesh::draw(Shader& shader, Camera& camera)
+void Mesh::draw(Shader& shader, Camera& camera, glm::mat4 matrix, glm::vec3 translation, glm::quat rotation, glm::vec3 scale)
 {
-	GLenum error;
-
 	shader.activate();
 	vao.bind();
 
@@ -45,18 +43,19 @@ void Mesh::draw(Shader& shader, Camera& camera)
 			throw std::invalid_argument{ "Invalid texture type: " + type };
 		}
 		texUnit(shader, (type + num).c_str(), i);
-		if ((error = glGetError()) != GL_NO_ERROR)
-		{
-			std::cerr << "texUnit OpenGL Error: " << error << std::endl;
-		}
 		textures[i].bind();
-		if ((error = glGetError()) != GL_NO_ERROR)
-		{
-			std::cerr << "bind OpenGL Error: " << error << std::endl;
-		}
 	}
 	glUniform3f(glGetUniformLocation(shader.handle, "camPos"), camera.position.x, camera.position.y, camera.position.z);
 	camera.matrix(shader, "camMatrix");
+
+	glm::mat4 trans = glm::translate(glm::mat4(1.0f), translation);
+	glm::mat4 rot = glm::mat4_cast(rotation);
+	glm::mat4 sca = glm::scale(glm::mat4(1.0f), scale);
+	
+	glUniformMatrix4fv(glGetUniformLocation(shader.handle, "translation"), 1, GL_FALSE, glm::value_ptr(trans));
+	glUniformMatrix4fv(glGetUniformLocation(shader.handle, "rotation"), 1, GL_FALSE, glm::value_ptr(rot));
+	glUniformMatrix4fv(glGetUniformLocation(shader.handle, "scale"), 1, GL_FALSE, glm::value_ptr(sca));
+	glUniformMatrix4fv(glGetUniformLocation(shader.handle, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 }

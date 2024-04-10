@@ -1,3 +1,92 @@
+/*#include "Model.h"
+
+constexpr GLint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
+
+int main()
+{
+	glfwInit();
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+	GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Project1", nullptr, nullptr);
+
+	if (window == nullptr)
+	{
+		std::cerr << "Failed to create GLFW window" << std::endl;
+		glfwTerminate();
+		return -1;
+	}
+	glfwMakeContextCurrent(window);
+
+	gladLoadGL();
+
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+
+	Shader shader("default.vert", "default.frag");
+
+	Shader lightShader("light.vert", "light.frag");
+
+	glm::vec4 lightColor{ 1.0f, 1.0f, 1.0f, 1.0f };
+	glm::vec3 lightPos(0.5f, 0.5f, 0.5f);
+	glm::mat4 lightModel = glm::translate(glm::mat4(1.0f), lightPos);
+
+	shader.activate();
+	glUniform4f(glGetUniformLocation(shader.handle, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	glUniform3f(glGetUniformLocation(shader.handle, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
+
+	glEnable(GL_DEPTH_TEST);
+
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+	Camera camera{ WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3{ 0.0f, 0.0f, 2.0f } };
+
+	Model model("models/sword/scene.gltf");
+
+	bool escaped = false;
+	
+	GLenum error;
+	while (!glfwWindowShouldClose(window))
+	{
+		glfwPollEvents();
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f); // Navy blue
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE))
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			escaped = true;
+			camera.firstClick = true;
+		}
+		else if (escaped && glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT))
+		{
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			escaped = false;
+		}
+
+		if (!escaped)
+		{
+			camera.handleMovementInputs(window);
+		}
+		camera.updateMatrix(90.0f, 0.1f, 100.0f);
+
+		model.draw(shader, camera);
+
+		glfwSwapBuffers(window);
+
+		if ((error = glGetError()) != GL_NO_ERROR)
+		{
+			std::cout << "OpenGL Error: " << error << std::endl;
+		}
+	}
+
+	// Cleanup
+	glfwDestroyWindow(window);
+	glfwTerminate();
+	return 0;
+}
+*/
 #include "Mesh.h"
 
 // Vertices coordinates
@@ -46,7 +135,7 @@ constexpr GLuint LIGHT_INDICES[] =
 
 constexpr GLint WINDOW_WIDTH = 800, WINDOW_HEIGHT = 800;
 
-int main()
+int main(int argc, const char *argv[])
 {
 	glfwInit();
 
@@ -66,7 +155,7 @@ int main()
 
 	gladLoadGL();
 
-	glViewport(0, 0, 800, 800);
+	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	const Texture TEXTURES[] =
 	{

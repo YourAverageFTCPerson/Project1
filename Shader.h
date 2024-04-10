@@ -10,9 +10,9 @@
 
 void compileShader(const GLuint& handle);
 
-void linkShader(const GLuint& program, const GLuint& vertexShader, const GLuint& fragmentShader);
+void linkShaders(const GLuint& program, const GLuint& vertexShader, const GLuint& fragmentShader);
 
-auto read_file(std::string_view path) -> std::string; // https://stackoverflow.com/questions/116038/how-do-i-read-an-entire-file-into-a-stdstring-in-c
+auto read_file(std::string/*_view*/ path) -> std::string; // https://stackoverflow.com/questions/116038/how-do-i-read-an-entire-file-into-a-stdstring-in-c
 
 struct Shader
 {

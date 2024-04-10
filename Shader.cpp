@@ -20,7 +20,7 @@ void compileShader(const GLuint& handle)
 	}
 }
 
-void linkShader(const GLuint& program, const GLuint& vertexShader, const GLuint& fragmentShader)
+void linkShaders(const GLuint& program, const GLuint& vertexShader, const GLuint& fragmentShader)
 {
 	glAttachShader(program, vertexShader);
 	glAttachShader(program, fragmentShader);
@@ -38,11 +38,11 @@ void linkShader(const GLuint& program, const GLuint& vertexShader, const GLuint&
 		std::vector<GLchar> errorLog(maxLength);
 		glGetProgramInfoLog(program, maxLength, &maxLength, &errorLog[0]);
 
-		throw std::runtime_error{ std::format("Error while linking shader: {}", std::string{errorLog.begin(), errorLog.end()}) };
+		throw std::runtime_error{ std::format("Error while linking shader: {}", std::string{ errorLog.begin(), errorLog.end() }) };
 	}
 }
 
-auto read_file(std::string_view path) -> std::string {
+auto rrrrrr(std::string_view path) -> std::string {
 	constexpr auto read_size = std::size_t(4096);
 	auto stream = std::ifstream(path.data());
 	stream.exceptions(std::ios_base::badbit);
@@ -54,10 +54,42 @@ auto read_file(std::string_view path) -> std::string {
 	auto out = std::string();
 	auto buf = std::string(read_size, '\0');
 	while (stream.read(&buf[0], read_size)) {
+		std::cout << "<>" << std::endl;
 		out.append(buf, 0, stream.gcount());
 	}
 	out.append(buf, 0, stream.gcount());
+	std::cout << "out: " << out << std::endl;
+
+
+
+
+
+
+	///////////////////
+	throw std::runtime_error("This method is faulty and we're not using it!!!!");
+	///////////////////
+
+
+
+
+
+
 	return out;
+}
+
+// Reads a text file and outputs a string with everything in the text file
+auto read_file(std::string filename) -> std::string {
+	std::ifstream in(filename.c_str(), std::ios::binary);
+	if (in) {
+		std::string contents;
+		in.seekg(0, std::ios::end);
+		contents.resize(in.tellg());
+		in.seekg(0, std::ios::beg);
+		in.read(&contents[0], contents.size());
+		in.close();
+		return(contents);
+	}
+	throw(errno);
 }
 
 Shader::Shader(const char* vertexFilename, const char* fragmentFilename) : handle(glCreateProgram()), vertexShaderHandle(glCreateShader(GL_VERTEX_SHADER)), fragmentShaderHandle(glCreateShader(GL_FRAGMENT_SHADER))
@@ -70,16 +102,16 @@ Shader::Shader(const char* vertexFilename, const char* fragmentFilename) : handl
 	glShaderSource(fragmentShaderHandle, 1, &szFragmentShaderSource, nullptr);
 	compileShader(vertexShaderHandle);
 	compileShader(fragmentShaderHandle);
-	linkShader(handle, vertexShaderHandle, fragmentShaderHandle);
+	linkShaders(handle, vertexShaderHandle, fragmentShaderHandle);
 }
 
 Shader::~Shader()
 {
-	glDeleteProgram(handle);
 	glDeleteShader(vertexShaderHandle);
 	glDeleteShader(fragmentShaderHandle);
 	glDetachShader(handle, vertexShaderHandle);
 	glDetachShader(handle, fragmentShaderHandle);
+	glDeleteProgram(handle);
 }
 
 void Shader::activate()
