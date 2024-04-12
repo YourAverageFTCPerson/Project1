@@ -2,7 +2,7 @@
 
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures) : vertices{ vertices }, indices{ indices }, textures{ textures }
 {
-	vao.bind();
+	vao.bind(); 
 
 	VBO vbo(vertices);
 
@@ -59,7 +59,6 @@ void Mesh::draw(Shader& shader, Camera& camera, glm::mat4 matrix, glm::vec3 tran
 		{
 			std::cerr << "|  before: " << error << std::endl;
 			glGetIntegerv(GL_CURRENT_PROGRAM, &prog);
-			std::cout << "current program: " << prog << std::endl;
 		}
 	}
 	glUniform3f(glGetUniformLocation(shader.handle, "camPos"), camera.position.x, camera.position.y, camera.position.z);

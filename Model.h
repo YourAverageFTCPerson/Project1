@@ -6,7 +6,7 @@
 using json = nlohmann::json;
 
 template<typename V>
-std::vector<V> groupFloats(const std::vector<GLfloat>& floats, const size_t& components);
+static std::vector<V> groupFloats(const std::vector<GLfloat>& floats, const size_t& components);
 
 #define groupFloatsVec2(floats) groupFloats<glm::vec2>(floats, 2)
 #define groupFloatsVec3(floats) groupFloats<glm::vec3>(floats, 3)
@@ -14,9 +14,8 @@ std::vector<V> groupFloats(const std::vector<GLfloat>& floats, const size_t& com
 
 std::vector<Vertex> assembleVertices(std::vector<glm::vec3> positions, std::vector<glm::vec3> normals, std::vector<glm::vec2> texUVs);
 
-class Model
+struct Model
 {
-public:
 	Model(const char* file);
 
 	void draw(Shader& shader, Camera& camera);
